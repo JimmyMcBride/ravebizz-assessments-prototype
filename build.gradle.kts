@@ -5,6 +5,7 @@ val koinVersion: String by project
 val exposedVersion: String by project
 val hikariVersion: String by project
 val postgresVersion: String by project
+val kgraphqlVersion: String by project
 
 plugins {
     application
@@ -30,10 +31,14 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("io.insert-koin:koin-ktor:$koinVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
+    implementation("org.mindrot:jbcrypt:0.4")
 
     implementation("org.jetbrains.exposed:exposed:$exposedVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
+
+    implementation("com.apurebase:kgraphql:$kgraphqlVersion")
+    implementation("com.apurebase:kgraphql-ktor:$kgraphqlVersion")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")

@@ -1,6 +1,6 @@
-package com.fireninja.service
+package com.fireninja.service.user.params
 
-data class CreateUserParams(
+data class RegisterUserParams(
   val firstName: String,
   val lastName: String,
   val email: String,

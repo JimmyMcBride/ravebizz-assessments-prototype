@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Table
 import org.joda.time.DateTime
 
 object UserTable : Table(name = "users") {
-  val id = integer("id").primaryKey().autoIncrement()
+  val id = integer("id").primaryKey().autoIncrement().uniqueIndex()
   val email = varchar("email", 256)
   val firstName = varchar("first_name", 256)
   val lastName = varchar("last_name", 256)

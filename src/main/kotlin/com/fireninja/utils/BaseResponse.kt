@@ -3,15 +3,16 @@ package com.fireninja.utils
 import io.ktor.http.*
 
 sealed class BaseResponse<T>(
-  val statusCode: HttpStatusCode = HttpStatusCode.OK
+  open val statusCode: HttpStatusCode = HttpStatusCode.OK
 ) {
   data class SuccessResponse<T>(
     val data: T? = null,
     val message: String? = null,
   ) : BaseResponse<T>()
 
-  data class ErrorResponse<T>(
-    val exception: T? = null,
+  data class ErrorResponse<Nothing>(
     val message: String? = null,
-  ) : BaseResponse<T>()
+    val exception: Exception? = null,
+    override var statusCode: HttpStatusCode = HttpStatusCode.BadRequest
+  ) : BaseResponse<Nothing>(statusCode)
 }

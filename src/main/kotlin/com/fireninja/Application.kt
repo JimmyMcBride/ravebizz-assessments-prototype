@@ -13,6 +13,7 @@ fun Application.module() {
   configureKoin()
   configureSecurity()
   configureRouting()
+  configureGraphQL()
   configureSerialization()
   configureMonitoring()
   configureDefaultHeader()

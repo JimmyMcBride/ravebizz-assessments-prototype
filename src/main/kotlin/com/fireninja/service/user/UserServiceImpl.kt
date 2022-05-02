@@ -1,20 +1,21 @@
-package com.fireninja.service
+package com.fireninja.service.user
 
 import com.fireninja.db.DatabaseFactory.dbQuery
 import com.fireninja.db.UserTable
 import com.fireninja.models.User
-import com.fireninja.security.hash
+import com.fireninja.service.user.params.RegisterUserParams
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.mindrot.jbcrypt.BCrypt
 
 class UserServiceImpl : UserService {
-  override suspend fun registerUser(params: CreateUserParams): User? {
+  override suspend fun registerUser(params: RegisterUserParams): User? {
     return transaction {
       val statement = UserTable.insert {
         it[email] = params.email
-        it[password] = hash(params.password)
+        it[password] = BCrypt.hashpw(params.password, BCrypt.gensalt())
         it[firstName] = params.firstName
         it[lastName] = params.lastName
       }
@@ -28,6 +29,22 @@ class UserServiceImpl : UserService {
       UserTable.select { UserTable.email.eq(email) }.map {
         rowToUser(it)
       }.singleOrNull()
+    }
+  }
+
+  override suspend fun findUserById(id: Int): User? {
+    return dbQuery {
+      UserTable.select { UserTable.id.eq(id) }.map {
+        rowToUser(it)
+      }.singleOrNull()
+    }
+  }
+
+  override suspend fun getUserHashedPassword(email: String): String {
+    return dbQuery {
+      UserTable.select { UserTable.email.eq(email) }.map {
+        it[UserTable.password]
+      }.single()
     }
   }
 

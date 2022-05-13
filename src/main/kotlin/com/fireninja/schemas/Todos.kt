@@ -18,6 +18,16 @@ fun SchemaBuilder.todoSchema(repository: Repository) {
       }
     }
   }
+  query("todo") {
+    resolver { todoId: Int, ctx: Context ->
+      val userIdPrincipal = ctx.get<UserIdPrincipalForUser>()
+      if (userIdPrincipal != null) {
+        repository.getTodoById(todoId)
+      } else {
+        throw Exception("No user is currently authenticated")
+      }
+    }
+  }
   mutation("addTodo") {
     resolver { newTodo: NewTodoParams, ctx: Context ->
       val userIdPrincipal = ctx.get<UserIdPrincipalForUser>()

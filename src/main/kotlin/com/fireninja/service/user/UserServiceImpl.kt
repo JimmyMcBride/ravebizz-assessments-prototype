@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.mindrot.jbcrypt.BCrypt
 
 class UserServiceImpl : UserService {
-  override suspend fun registerUser(params: RegisterUserParams): User? {
+  override fun registerUser(params: RegisterUserParams): User? {
     return transaction {
       val statement = UserTable.insert {
         it[email] = params.email

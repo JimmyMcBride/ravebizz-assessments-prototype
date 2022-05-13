@@ -10,8 +10,17 @@ import com.fireninja.service.user.params.LoginUserParams
 interface Repository {
   suspend fun registerUser(params: RegisterUserParams): User
   suspend fun loginUser(params: LoginUserParams): User
-  suspend fun addTodo(params: NewTodoParams, userId: Int): Todo
-  suspend fun getTodosByUserId(userId: Int): List<Todo>
-  suspend fun editTodo(params: EditTodoParams, userId: Int): Todo
-  suspend fun deleteTodo(todoInt: Int): Boolean
+  fun addTodo(
+    params: NewTodoParams,
+    userId: Int,
+  ): Todo
+
+  fun getTodosByUserId(userId: Int): List<Todo>
+  fun getTodoById(todoId: Int): Todo
+  fun editTodo(
+    params: EditTodoParams,
+    userId: Int,
+  ): Todo
+
+  fun deleteTodo(todoInt: Int): Boolean
 }

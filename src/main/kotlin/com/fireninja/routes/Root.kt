@@ -9,6 +9,7 @@ import io.ktor.routing.*
 
 fun Route.root() {
   get("/") {
+    call.application.environment.log.info("Hello from /api/v1!")
     call.respond(
       message = "Welcome to RaveBizz Assessments API!",
       status = HttpStatusCode.OK

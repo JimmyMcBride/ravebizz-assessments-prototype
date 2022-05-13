@@ -31,11 +31,13 @@ class RepositoryImpl(
   }
 
   override suspend fun loginUser(
-    params: LoginUserParams
+    params: LoginUserParams,
   ): User {
     val user = userService.findUserByEmail(params.email)
     return if (user != null) {
-      if (BCrypt.checkpw(params.password, userService.getUserHashedPassword(user.email))) {
+      if (BCrypt.checkpw(params.password,
+          userService.getUserHashedPassword(user.email))
+      ) {
         val token = JwtConfig.instance.createAccessToken(user.id)
         user.authToken = token
         user
@@ -47,22 +49,30 @@ class RepositoryImpl(
     }
   }
 
-  override suspend fun addTodo(params: NewTodoParams, userId: Int): Todo {
-    return todoService.addTodo(params, userId)
+  override fun addTodo(
+    params: NewTodoParams,
+    userId: Int,
+  ): Todo {
+    return todoService.addTodo(params,
+      userId)
   }
 
-  override suspend fun getTodosByUserId(userId: Int): List<Todo> {
+  override fun getTodosByUserId(userId: Int): List<Todo> {
     return todoService.getTodosByUserId(userId)
   }
 
-  override suspend fun editTodo(
+  override fun getTodoById(todoId: Int): Todo {
+    return todoService.getTodoById(todoId)
+  }
+
+  override fun editTodo(
     params: EditTodoParams,
     userId: Int,
   ): Todo {
     return todoService.editTodo(params)
   }
 
-  override suspend fun deleteTodo(todoInt: Int): Boolean {
+  override fun deleteTodo(todoInt: Int): Boolean {
     return todoService.deleteTodo(todoInt)
   }
 

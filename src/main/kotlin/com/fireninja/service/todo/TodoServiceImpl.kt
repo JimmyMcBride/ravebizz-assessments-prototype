@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class TodoServiceImpl : TodoService {
-  override suspend fun addTodo(
+  override fun addTodo(
     params: NewTodoParams,
     userId: Int,
   ): Todo {
@@ -23,7 +23,7 @@ class TodoServiceImpl : TodoService {
     }
   }
 
-  override suspend fun editTodo(params: EditTodoParams): Todo {
+  override fun editTodo(params: EditTodoParams): Todo {
     return transaction {
       val currentTodo = TodoTable.select(where = {
         TodoTable.id eq params.id
@@ -45,7 +45,7 @@ class TodoServiceImpl : TodoService {
     }
   }
 
-  override suspend fun deleteTodo(todoId: Int): Boolean {
+  override fun deleteTodo(todoId: Int): Boolean {
     return transaction {
       val statement = TodoTable.deleteWhere {
         TodoTable.id eq todoId
@@ -54,7 +54,7 @@ class TodoServiceImpl : TodoService {
     }
   }
 
-  override suspend fun getTodosByUserId(userId: Int): List<Todo> {
+  override fun getTodosByUserId(userId: Int): List<Todo> {
     return transaction {
       val statement = TodoTable.select(where = {
         TodoTable.userId eq userId
@@ -65,17 +65,20 @@ class TodoServiceImpl : TodoService {
     }
   }
 
-  private fun getTodoById(todoId: Int): Todo {
-    val todo = TodoTable.select(where = {
-      TodoTable.id eq todoId
-    }).map {
-      rowToTodo(it)
-    }[0]
-    if (todo != null) {
-      return todo
-    } else {
-      throw Exception("Could not find todo with that id.")
+  override fun getTodoById(todoId: Int): Todo {
+    return transaction {
+      val todo = TodoTable.select(where = {
+        TodoTable.id eq todoId
+      }).map {
+        rowToTodo(it)
+      }[0]
+      if (todo != null) {
+        return@transaction todo
+      } else {
+        throw Exception("Could not find todo with that id.")
+      }
     }
+
   }
 
   private fun rowToTodo(row: ResultRow?): Todo? {

@@ -1,3 +1,1 @@
-
-rootProject.name = "rave-assessments"
-
+rootProject.name = "todo-ktor-gql"
